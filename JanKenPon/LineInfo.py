@@ -18,45 +18,52 @@ class LineInfo:
         self.y = y
 
 
-def DrawLines(screen, array):
+def DrawLines(screen, color, array):
     buff = []
     for info in array:
         buff.append((info.x, info.y))
 
     if len(buff) > 1:
-        print("aa")
-        pygame.draw.lines(screen, (255, 255, 255), False, buff)
+        pygame.draw.lines(screen, color, False, buff, 2)
+#        for aaa in buff:
+#            pygame.draw.circle(screen, color, aaa, 3)
+            
     elif len(buff) == 1:
-        print("bb")
-        pygame.draw.circle(screen, (255, 255, 255), buff[0], 5)
+        pygame.draw.circle(screen, color, buff[0], 2)
 
 
-def DrawLinesEx(screen, array):
+def DrawLinesEx(screen, color, array, limit = -1):
     prev = 0
     buff = []
+    
+    counter = 0
 
     for info in array:
+        if limit >= 0 and counter >= limit:
+            break
         if info.depth != prev:
-            DrawLines(screen, buff)
+            DrawLines(screen, color, buff)
             buff = []
         buff.append(info)
+        
         prev = info.depth
+        counter += 1
 
-    DrawLines(screen, buff)
+    DrawLines(screen, color, buff)
 
 
 
-def OutputData(name, list):
-    with open(name, 'w') as f:
-        pickle.dump(list, f)
+def OutputData(name, array):
+    with open(name, 'wb') as f:
+        pickle.dump(array, f)
 
 
 def InputData(name):
-    list = []
+    array = []
     with open(name,"rb") as f:
-        list = pickle.load(f)
+        array = pickle.load(f)
 
-    return list
+    return array
 
 
 
